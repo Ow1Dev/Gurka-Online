@@ -29,6 +29,15 @@ describe('Player', () => {
     expect(player.hand.length).toBe(0);
   });
 
+  it('Should be able to clear the hand', () => {
+    const player = new Player('name');
+    const card = new Card();
+    player.dealCard(card);
+
+    player.clearHand();
+    expect(player.hand.length).toBe(0);
+  });
+
   it('Should return if the player owns the card', () => {
     const player_1 = new Player();
     const player_2 = new Player();

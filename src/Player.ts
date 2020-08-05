@@ -16,6 +16,10 @@ export default class Player {
     return this.hand.includes(card);
   }
 
+  clearHand() {
+    this.hand.splice(0, this.hand.length);
+  }
+
   getCard(index: number): Card {
     return this.hand[index];
   }

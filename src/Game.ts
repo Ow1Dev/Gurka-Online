@@ -2,8 +2,16 @@ import Player from './Player';
 import Deck from './Deck';
 import Card from './Card';
 
+interface Stats {
+  round: number;
+}
+
 export default class Game {
   players: Player[] = [];
+
+  stats: Stats = {
+    round: 0,
+  };
 
   deck: Deck = new Deck();
   middledeck: Deck = new Deck();
@@ -26,15 +34,30 @@ export default class Game {
     this.players = players;
   }
 
+  /*
+   *  Reset the round with a specific number
+   */
   reset(count: number) {
     this.deck.initCards();
     this.players.forEach((p) => {
+      p.clearHand();
       for (let i = 0; i < count; i++) {
         this.getACardFromDeck(p);
       }
     });
   }
 
+  /*
+   * Starts a new round
+   */
+  startNewRound(count: number) {
+    this.stats.round += 1;
+    this.reset(count);
+  }
+
+  /*
+   * Trades the card between the player and the deck
+   */
   private trade(p: Player, d: Deck, card: Card) {
     d.removeCard(card);
     p.dealCard(card);
@@ -90,5 +113,7 @@ export default class Game {
     this.started = true;
   }
 
-  //TODO: Stop function
+  stopGame() {
+    this.started = false;
+  }
 }

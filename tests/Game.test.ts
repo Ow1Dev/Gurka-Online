@@ -19,6 +19,19 @@ describe('Game', () => {
 
     game.start();
     expect(game.hasStarted).toBe(true);
+
+    game.stopGame();
+    expect(game.hasStarted).toBe(false);
+  });
+
+  it('Should be able to start a new round', () => {
+    const player = new Player();
+    const game = new Game([player]);
+
+    game.startNewRound(6);
+    game.startNewRound(6);
+    expect(player.hand.length).toBe(6);
+    expect(game.stats.round).toBe(2);
   });
 
   it('Should be able to put a card in the middle', () => {
@@ -66,7 +79,7 @@ describe('Game', () => {
   });
 
   it('Should return to first player when finishTurn', () => {
-    const game = new Game();
+    const game = new Game([new Player(), new Player()]);
     game.start();
 
     game.setPlayerTurn(game.players.length - 1);
