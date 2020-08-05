@@ -1,5 +1,6 @@
 import Game from '../src/Game';
 import Player from '../src/Player';
+import Card, { Suits } from '../src/Card';
 
 describe('Game', () => {
   it('Should create an instance of the game', () => {
@@ -18,6 +19,39 @@ describe('Game', () => {
 
     game.start();
     expect(game.hasStarted).toBe(true);
+  });
+
+  it('Should be able to put a card in the middle', () => {
+    const player = new Player('test');
+    const game = new Game([player]);
+
+    const card_1 = new Card(Suits.SPADE, 1);
+    const card_2 = new Card(Suits.SPADE, 5);
+    const card_3 = new Card(Suits.SPADE, 11);
+
+    player.dealCard(card_1);
+    player.dealCard(card_2);
+    player.dealCard(card_3);
+
+    expect(player.hand.length).toBe(3);
+
+    let success = false;
+
+    // Start card
+    success = game.putACardinMiddleDeck(player, card_3);
+    expect(success).toBe(true);
+    expect(player.hand.length).toBe(2);
+    expect(game.middledeck.cards.length).toBe(1);
+
+    success = game.putACardinMiddleDeck(player, card_2);
+    expect(success).toBe(false);
+    expect(player.hand.length).toBe(2);
+    expect(game.middledeck.cards.length).toBe(1);
+
+    success = game.putACardinMiddleDeck(player, card_1);
+    expect(success).toBe(true);
+    expect(player.hand.length).toBe(1);
+    expect(game.middledeck.cards.length).toBe(2);
   });
 
   it('Should give player 7 cards each', () => {
@@ -41,5 +75,3 @@ describe('Game', () => {
     expect(game.currentPlayer).toBe(game.players[0]);
   });
 });
-
-const game = new Game();

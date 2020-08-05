@@ -1,5 +1,5 @@
 import Deck from '../src/Deck';
-import Card, { Suits } from '../src/Card';
+import Card from '../src/Card';
 
 describe('Deck', () => {
   it('Should create an instance of the player', () => {
@@ -9,6 +9,7 @@ describe('Deck', () => {
 
   it('Should deal have 54 cards', () => {
     const deck = new Deck();
+    deck.initCards();
     deck.initCards();
     expect(deck.cards.length).toBe(54);
   });
@@ -22,6 +23,7 @@ describe('Deck', () => {
     expect(deck.cards.length).toBe(1);
     expect(deck.cards[0]).toBe(card);
   });
+
   it('Should be apple to remove a card to deck', () => {
     const deck = new Deck();
     const card = new Card();

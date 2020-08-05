@@ -29,6 +29,22 @@ describe('Player', () => {
     expect(player.hand.length).toBe(0);
   });
 
+  it('Should return if the player owns the card', () => {
+    const player_1 = new Player();
+    const player_2 = new Player();
+    const card = new Card();
+
+    player_1.dealCard(card);
+    expect(player_1.hand.length).toBe(1);
+    expect(player_2.hand.length).toBe(0);
+
+    var p1OwnsCard = player_1.ownsCard(card);
+    var p2OwnsCard = player_2.ownsCard(card);
+
+    expect(p1OwnsCard).toBe(true);
+    expect(p2OwnsCard).toBe(false);
+  });
+
   it('Should return currect card', () => {
     const player = new Player('name');
     const card = new Card();
@@ -38,6 +54,20 @@ describe('Player', () => {
 
     expect(player.hand.length).toBe(2);
     expect(player.getCard(0)).toMatchObject(card);
+  });
+
+  it('Should return the lowest card', () => {
+    const player = new Player();
+    const lowCard = new Card(Suits.HEART, 2);
+
+    player.dealCard(new Card(Suits.CLUB, 7));
+    player.dealCard(lowCard);
+    player.dealCard(new Card(Suits.DIAMOND, 3));
+
+    expect(player.getCard(1)).toBe(lowCard);
+
+    const c = player.getLowestCard();
+    expect(c).toBe(lowCard);
   });
 
   it('Player should have a name', () => {

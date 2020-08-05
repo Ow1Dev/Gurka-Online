@@ -4,6 +4,8 @@ export default class Deck {
   cards: Card[] = [];
 
   initCards() {
+    this.cards.splice(0, this.cards.length);
+
     for (let i = 1; i <= 13; i++) {
       this.cards.push(new Card(Suits.CLUB, i));
       this.cards.push(new Card(Suits.DIAMOND, i));

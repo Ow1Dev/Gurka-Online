@@ -27,6 +27,7 @@ export default class Game {
   }
 
   reset(count: number) {
+    this.deck.initCards();
     this.players.forEach((p) => {
       for (let i = 0; i < count; i++) {
         this.getACardFromDeck(p);
@@ -34,7 +35,7 @@ export default class Game {
     });
   }
 
-  trade(p: Player, d: Deck, card: Card) {
+  private trade(p: Player, d: Deck, card: Card) {
     d.removeCard(card);
     p.dealCard(card);
   }
@@ -50,9 +51,19 @@ export default class Game {
   /**
    * Puts the card from the deck
    */
-  putACardinMiddleDeck(player: Player, cardIndex: number) {
-    let card = player.getCard(cardIndex);
-    if (card === null) return;
+  putACardinMiddleDeck(player: Player, card: Card): boolean {
+    if (card === undefined) return false;
+
+    if (
+      this.middledeck.cards[0] === undefined ||
+      card.number >= this.middledeck.cards[0].number ||
+      card === player.getLowestCard()
+    ) {
+      player.takeCard(card);
+      this.middledeck.addCard(card);
+      return true;
+    }
+    return false;
   }
 
   /**
