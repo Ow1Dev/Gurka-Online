@@ -7,16 +7,15 @@ interface Stats {
 }
 
 export default class Game {
-  players: Player[] = [];
-
-  stats: Stats = {
+  private stats: Stats = {
     round: 0,
   };
 
+  players: Player[] = [];
   deck: Deck = new Deck();
   middledeck: Deck = new Deck();
 
-  private started = false;
+  private started: boolean = false;
   private currentPlayerIndex: number = 0;
 
   get currentPlayer() {
@@ -25,6 +24,10 @@ export default class Game {
 
   get hasStarted() {
     return this.started;
+  }
+
+  get getStats() {
+    return this.stats;
   }
 
   /**
