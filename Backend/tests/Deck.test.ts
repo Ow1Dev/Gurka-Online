@@ -1,5 +1,5 @@
-import Deck from '../src/Deck';
-import Card from '../src/Card';
+import Deck from '../src/Game/Deck';
+import Card from '../src/Game/Card';
 
 describe('Deck', () => {
   it('Should create an instance of the player', () => {
