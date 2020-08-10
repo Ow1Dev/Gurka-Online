@@ -51,6 +51,15 @@ export default class Game {
   }
 
   /*
+   * Send a message to all the players
+   */
+  boardcast(msg: string) {
+    this.players.forEach((e) => {
+      e.conneciton?.send(msg);
+    });
+  }
+
+  /*
    * Starts a new round
    */
   startNewRound(count: number) {

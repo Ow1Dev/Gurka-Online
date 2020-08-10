@@ -3,9 +3,12 @@ import expressWs from 'express-ws';
 import * as ws from 'ws';
 import HashTable from './Util/HashTable';
 
+import Game from './Game/Game';
+import Player from './Game/Player';
+
 const app = expressWs(express()).app;
 
-var games: HashTable<ws[]> = {};
+var games: HashTable<Game> = {};
 
 app.ws('/game', (ws, req) => {
   if (!req.query.ID || !req.query.Name) {
@@ -25,45 +28,58 @@ app.ws('/game', (ws, req) => {
     let v = JSON.parse(msg);
     if (!v.type) return;
 
+    const player = GetPlayerBySocket(ID, ws);
+    if (player === null) return;
+    v.player = player;
+
     switch (v.type) {
       case 'StartGame':
-        BoardCastToGame(ID, 'the Game has started');
+        games[ID].boardcast('the Game has started');
       case 'Msg':
-        BoardCastToGame(ID, v.msg);
+        games[ID].boardcast(`${v.player.name}: ${v.msg}`);
     }
   });
 
   ws.on('close', () => {
-    RemovePlayerFromGame(ID, ws);
-    BoardCastToGame(ID, `${Name} has Left`);
+    RemovePlayerFromGame(ID, GetPlayerBySocket(ID, ws));
+    games[ID].boardcast(`${Name} has Left`);
   });
 
   ws.on('error', () => {
-    RemovePlayerFromGame(ID, ws);
-    BoardCastToGame(ID, `Player got disconnected`);
+    RemovePlayerFromGame(ID, GetPlayerBySocket(ID, ws));
+    games[ID].boardcast(`Player got disconnected`);
   });
 
   console.log(games[ID]);
 
-  AddPlayerToGame(ID, ws);
-  BoardCastToGame(ID, `${Name} has joined this room`);
+  AddPlayerToGame(ID, new Player(ws, Name));
+  games[ID].boardcast(`${Name} has joined this room`);
 });
 
-function AddPlayerToGame(ID: string, socket: ws) {
-  games[ID] = games[ID] === undefined ? [] : games[ID];
-  games[ID].push(socket);
+//TODO: Add and rmove plauer to gamme class
+function AddPlayerToGame(ID: string, player: Player) {
+  games[ID] = games[ID] === undefined ? new Game() : games[ID];
+  games[ID].players.push(player);
 }
 
-function RemovePlayerFromGame(ID: string, socket: ws) {
-  var index = games[ID].indexOf(socket);
+function RemovePlayerFromGame(ID: string, player: Player | null) {
+  if (player === null) return;
+
+  var index = games[ID].players.indexOf(player);
   if (index < 0) return;
-  games[ID].splice(index, 1);
+  games[ID].players.splice(index, 1);
 }
 
-function BoardCastToGame(ID: string, msg: string) {
-  games[ID].forEach((e) => {
-    e.send(msg);
-  });
+//TODO: Add to util class
+function GetPlayerBySocket(ID: string, socket: ws): Player | null {
+  var player: Player | null = null;
+  for (let p of games[ID].players) {
+    if (p.conneciton === socket) {
+      player = p;
+      break;
+    }
+  }
+  return player;
 }
 
 const PORT = process.env.PORT || 5000;
