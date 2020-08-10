@@ -21,8 +21,16 @@ app.ws('/game', (ws, req) => {
     return;
   }
 
-  ws.on('message', (msg: String) => {
-    ws.send(msg);
+  ws.on('message', (msg: string) => {
+    let v = JSON.parse(msg);
+    if (!v.type) return;
+
+    switch (v.type) {
+      case 'StartGame':
+        BoardCastToGame(ID, 'the Game has started');
+      case 'Msg':
+        BoardCastToGame(ID, v.msg);
+    }
   });
 
   ws.on('close', () => {

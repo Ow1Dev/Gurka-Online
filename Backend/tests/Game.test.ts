@@ -25,17 +25,17 @@ describe('Game', () => {
   });
 
   it('Should be able to start a new round', () => {
-    const player = new Player();
+    const player = new Player(null);
     const game = new Game([player]);
 
     game.startNewRound(6);
     game.startNewRound(6);
     expect(player.hand.length).toBe(6);
-    expect(game.stats.round).toBe(2);
+    expect(game.getStats.round).toBe(2);
   });
 
   it('Should be able to put a card in the middle', () => {
-    const player = new Player('test');
+    const player = new Player(null, 'test');
     const game = new Game([player]);
 
     const card_1 = new Card(Suits.SPADE, 1);
@@ -68,7 +68,7 @@ describe('Game', () => {
   });
 
   it('Should give player 7 cards each', () => {
-    const player = new Player('name');
+    const player = new Player(null, 'name');
     const game = new Game([player]);
 
     game.deck.initCards();
@@ -79,7 +79,7 @@ describe('Game', () => {
   });
 
   it('Should return to first player when finishTurn', () => {
-    const game = new Game([new Player(), new Player()]);
+    const game = new Game([new Player(null), new Player(null)]);
     game.start();
 
     game.setPlayerTurn(game.players.length - 1);

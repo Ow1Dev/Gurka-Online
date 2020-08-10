@@ -1,11 +1,14 @@
 import Card from './Card';
+import ws from 'ws';
 
 export default class Player {
   hand: Card[] = [];
   name: string;
+  conneciton: ws | null;
 
-  constructor(name: string = 'NoName') {
+  constructor(conneciton: ws | null, name: string = 'NoName') {
     this.name = name;
+    this.conneciton = conneciton;
   }
 
   dealCard(card: Card) {
