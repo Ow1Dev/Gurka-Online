@@ -50,7 +50,8 @@ app.ws('/game', (ws, req) => {
     games[ID].boardcast(`Player got disconnected`);
   });
 
-  console.log(games[ID]);
+  //If Game not created. create it
+  games[ID] = games[ID] === undefined ? new Game() : games[ID];
 
   AddPlayerToGame(ID, new Player(ws, Name));
   games[ID].boardcast(`${Name} has joined this room`);
@@ -58,7 +59,6 @@ app.ws('/game', (ws, req) => {
 
 //TODO: Add and rmove plauer to gamme class
 function AddPlayerToGame(ID: string, player: Player) {
-  games[ID] = games[ID] === undefined ? new Game() : games[ID];
   games[ID].players.push(player);
 }
 

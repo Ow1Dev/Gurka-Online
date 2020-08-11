@@ -32,6 +32,10 @@ export default class Player {
     return this.hand.reduce((min, curr) => (curr.number < min.number ? curr : min), this.hand[0]);
   }
 
+  addPlayer(player: Player) {}
+
+  removePlayer(player: Player) {}
+
   takeCard(card: Card) {
     let index = this.hand.indexOf(card);
     if (index < 0) return;
